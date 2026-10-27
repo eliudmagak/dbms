@@ -1,0 +1,280 @@
+DATABASES: ERDs & RELATIONSHIPS
+
+1. ENTITY
+
+An Entity represents a database table.
+
+Examples:
+- Users
+- Customers
+- Products
+- Students
+- Courses
+
+Example:
+
+Users
+Customers
+Products
+Order Details
+Payments
+
+Attributes describe entities and represent columns of a table.
+
+Example:
+
+Student
+--------
+student_id
+name
+email
+age
+
+
+2. PARENT AND CHILD ENTITIES
+
+Users (Parent)
+│
+├── Customer (Child)
+├── Seller (Child)
+└── Admin (Child)
+
+
+3. WHY RELATIONSHIPS ARE USED
+
+A Database Management System (DBMS) aims to reduce redundancy by creating relationships between tables.
+
+Relational databases describe how one entity is associated with another in a database.
+
+
+4. PRIMARY KEY
+
+A Primary Key is a column in an entity/table used to uniquely identify a record.
+
+Examples:
+
+Student
+-----------------------------------
+student_id | name      | age
+1          | jack@gmail.com | 21
+2          | joy@gmail.com  | 22
+
+Primary Key = student_id
+
+
+5. EXAMPLE ENTITIES
+
+Course
+--------
+course_id
+course_name
+
+Department
+-----------
+department_id
+department_name
+
+Teacher
+--------
+teacher_id
+department_id
+teacher_name
+teacher_experience
+
+Class
+------
+class_id
+teacher_id
+class_name
+class_count
+
+Student
+--------
+student_id
+class_id
+name
+age
+
+
+6. TYPES OF RELATIONSHIPS
+
+1. ONE-TO-ONE (1:1)
+
+One record in Entity A is associated with one record in Entity B and vice versa.
+
+Example:
+
+Student ↔ Admission Record
+
+One student has one admission record.
+Each admission record belongs to exactly one student.
+
+Diagram:
+
+Student ||------|| Admission
+
+
+2. ONE-TO-MANY (1:M)
+
+One record in Entity A can be associated with many records in Entity B, but each record in Entity B belongs to only one record in Entity A.
+
+Example:
+
+Class → Students
+
+One class has many students.
+Each student belongs to one class.
+
+Diagram:
+
+Class    ||------<
+Student
+
+
+3. MANY-TO-MANY (M:M)
+
+Many records in Entity A can relate to many records in Entity B.
+
+Example:
+
+Students ↔ Subjects
+
+A student studies many subjects.
+Each subject is studied by many students.
+
+Diagram:
+
+Student >------< Subject
+
+Implementation:
+
+Student
+--------
+student_id
+
+Subject
+--------
+subject_id
+
+Student_Subject
+---------------
+student_id
+subject_id
+
+
+MEMORY AIDS
+
+One-to-One (1:1)
+Person ↔ Passport
+
+One-to-Many (1:M)
+Class ↔ Students
+
+Many-to-Many (M:M)
+Students ↔ Subjects
+
+    *SQL QUERIES*
+->These are SQL statements meant to either insert, retrieve, update or remove data from a database
+
+    *ADDING & FETCHING DATA IN SQL*
+For you to add records to a table we use the keyword 'INSERT'
+
+-> Adding new records (rows) to a table
+serial->Postgres generates it automatically-> don't need it to add when adding new record
+
+     *Syntax of inserts*
+syntax-> how you write it
+
+*INSERT INTO tablename*-> tels postgres which table to add to
+    e.g INSERT INTO students
+*column names*-> specifies the columns receiving data
+    (student_name, age, gender, email)
+*values*
+-> correspomding values matching your column names
+
+Full syntax: *INSERT INTO table_name(column1, column2, column3...)VALUES(value1, value2, value3,...);*
+            
+            *INSERT INTO table_name( column1, column2, column3,....)VALUES
+                         (value1, value2, value3,...),
+                         (value1, value2, value3,...);
+
+->We retrieve data using the key word select
+*select*-> retrieve or read data from a table
+
+*Select from every column*
+Syntax :   SELECT * FROM table_name;
+       eg. SELECT * FROM students;  
+       * ->retrieve from all columns 
+
+*Select from specific column*
+   ->SELECT column1,column2 FROM table_name;
+    e.g, SELECT student_namw, age FROM students;
+
+*Select by filtering*
+-> Use the WHERE clause
+-> where clause : filter results -> only rows matching a specified condition are returned
+  
+
+  between and ordyby
+
+
+     *Like and not like*
+  wildcards
+->placeholders for characteres
+-> % =>represent single, none or multiple characters 
+-> -or_ =>represents single character
+
+eg  SELECT * FROM customers WHERE customername LIKE 'A%'; -> returning customernames that starts with letter A
+    SELECT * FROM customers WHERE customername LIKE '%A%'; -> returning customernames with A anywhere
+
+-> Display orders made in the month of January 1997
+
+SELECT * from orders WHERE orderdate LIKE '1997-01%';
+
+ -> Display products without character U in the productname
+
+ SELECT * from products WHERE productname NOT LIKE '%u%';
+
+       *Between and Not between*
+->Used to filter records of certain range
+ Displayproducts with price range of 10 to 50
+ SELECT * from products WHERE 
+
+     *order by*
+-> Used to order records in asc or desc using a certain column
+
+=>display products for category 5 from the lowest price
+ SELECT * from products WHERE categoryID=5 ORDER BY price;
+
+ =>Display all orderdetails from the highest quantity
+ SELECT * from orderdetails ORDER BY quantity DESC;
+
+=>Display all orderdetails for product 11 from the highest quantity
+SELECT * from orderdetails WHERE productid=11 ORDER BY quantity DESC;
+
+      Count and group by
+-> Used to get the number of records or rows in a table
+=> Returns on values
+    
+      syntax
+select count(primary_key/*) from table_name;
+
+select count(productID) where categoryid=1;
+
+1. Count all orders that belong to employee number 5
+SELECT count(orderID) from  orders where employeeid= 5;
+
+2. count all orders that belong to shipper number 3
+SELECT count(orderID) from  orders where shipperid= 3;
+
+3. count all products from supplier number 4
+SELECT count(productid) from  products where supplierid= 4;
+
+      group by
+=> Used to group related records
+
+-> Display the number of orders for each customer
+select customerid, count(orderid) as number_of_orders from orders group by customerid;
+
+-> Display the number of products for each supplier
+SELECT supplierid, count(productid) as number_of_products group by supplierid; 
